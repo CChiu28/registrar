@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS students CASCADE;
+DROP TABLE IF EXISTS class CASCADE;
+DROP TABLE IF EXISTS regcourse CASCADE;
 
 CREATE TABLE IF NOT EXISTS students (
     id INTEGER NOT NULL PRIMARY KEY,
@@ -16,5 +19,5 @@ CREATE TABLE IF NOT EXISTS regcourse (
     class_id1 INTEGER NOT NULL REFERENCES class(id)
 )
 
--- \COPY students FROM './MOCK_DATA.csv' WITH (FORMAT csv);
--- \COPY class FROM './MOCK_DATA2.csv' WITH (FORMAT csv);
+\COPY students FROM './MOCK_DATA.csv' WITH (FORMAT csv);
+\COPY class FROM './MOCK_DATA2.csv' WITH (FORMAT csv);

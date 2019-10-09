@@ -11,19 +11,19 @@ public class StudentOptions {
 	Connection c = null;
 	Statement stmt = null;
 	
-	public StudentOptions(String db, String user, String pass) {
+	public StudentOptions(String db, String user, String pass) throws Exception {
 		this.db = db;
 		this.user = user;
 		this.pass = pass;
-		try {
+//		try {
 			Class.forName("org.postgresql.Driver");
 			c = DriverManager
 					.getConnection(db, user, pass);
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.err.println(e.getClass().getName()+": "+e.getMessage());
-			System.exit(0);
-		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.err.println(e.getClass().getName()+": "+e.getMessage());
+//			System.exit(0);
+//		}
 	}
 	
 	public void addStudent(int id, String lname, String fname) {

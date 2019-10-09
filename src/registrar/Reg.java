@@ -12,10 +12,12 @@ public class Reg {
 		final String pass = "admin";
 		Connection c = null;
 		Statement stmt = null;
+		StudentOptions addstudent = null;
 		try {
 			Class.forName("org.postgresql.Driver");
 			c = DriverManager
 					.getConnection(db, user, pass);
+			addstudent = new StudentOptions(db, user, pass);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(e.getClass().getName()+": "+e.getMessage());
@@ -23,7 +25,6 @@ public class Reg {
 		}
 		System.out.println("Opened DB succcessfully");
 		
-		StudentOptions addstudent = new StudentOptions(db, user, pass);
 //		addstudent.addStudent(123456, "Sefs", "Sefsf");
 		addstudent.delStudent(123456);
 		try {
