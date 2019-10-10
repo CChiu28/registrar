@@ -5,20 +5,13 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class StudentOptions {
-	String db;
-	String user;
-	String pass;
-	Connection c = null;
-	Statement stmt = null;
+	private Connection c = null;
+	private Statement stmt = null;
 	
-	public StudentOptions(String db, String user, String pass) throws Exception {
-		this.db = db;
-		this.user = user;
-		this.pass = pass;
+	public StudentOptions() throws Exception {
 //		try {
 			Class.forName("org.postgresql.Driver");
-			c = DriverManager
-					.getConnection(db, user, pass);
+			c = DataSource.getInstance().getConnection();
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //			System.err.println(e.getClass().getName()+": "+e.getMessage());

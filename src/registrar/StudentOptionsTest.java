@@ -42,7 +42,7 @@ public class StudentOptionsTest {
 	@Test
 	public void testStudentOptions() {
 		try {
-			studTest = new StudentOptions(db, user, pass);
+			studTest = new StudentOptions();
 		} catch (Exception e) {
 			System.err.println(e.getClass().getName()+": "+e.getMessage());
 			fail("Exception occurred");
@@ -55,7 +55,7 @@ public class StudentOptionsTest {
 		int id;
 		String lname, fname;
 		try {
-			studTest = new StudentOptions(db,user,pass);
+			studTest = new StudentOptions();
 			studTest.addStudent(1234, "last", "first");
 			stmt = c.createStatement();
 			rs = stmt.executeQuery("SELECT * FROM students WHERE id=1234;");
