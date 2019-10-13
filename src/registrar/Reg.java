@@ -20,14 +20,15 @@ public class Reg {
 		
 		do {
 //			input = scanner.next();
-			System.out.println("Options:\n1. Add student\n2. Delete student\n3. List students\n4.Add course\n0. Quit\n9. List DB");
+			System.out.println("Options:\n1. Add student\n2. Update student\n3. Search students\n4.Add course\n0. Quit\n9. List DB");
 			System.out.println("Select your option: ");
 			switch(scanner.next()) {
 			case "1":
 				addStudent(scanner, student);
 				break;
 			case "2":
-				
+				updateStudent(scanner, student);
+				break;
 			case "0":
 				quit = true;
 				break;
@@ -39,7 +40,8 @@ public class Reg {
 			}
 		} while (!quit);
 		System.out.println("Thank you, come again");
-		
+		scanner.close();
+		System.exit(0);
 	}
 	
 	public static void addStudent(Scanner scanner, StudentOptions student) {
@@ -67,6 +69,50 @@ public class Reg {
 		String fname = scanner.nextLine();
 		System.out.println(fname);
 		student.addStudent(id, lname, fname);
+	}
+	
+	public static void updateStudent(Scanner scanner, StudentOptions student) {
+		int id, findId = 0, newId;
+		String lname = null, fname = null;
+		System.out.print("You have selected to update student information\nEnter your ID number: ");
+		scanner.nextLine();
+		while (!scanner.hasNextInt() || (id = scanner.nextInt())<=0) {
+			System.out.print("Please enter a valid ID: ");
+			scanner.nextLine();
+		}
+		ResultSet rs = student.findStudent(id);
+		try {
+			while (rs.next()) {
+				findId = rs.getInt("id");
+				lname = rs.getString("lname");
+				fname = rs.getString("fname");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (findId==0) {
+			System.out.println("Cannot find this ID");
+		} else {
+			System.out.println("We have found: ");
+			System.out.println(findId+"\t"+lname+"\t"+fname);
+			scanner.nextLine();
+			System.out.print("Update last name: ");
+			while (!scanner.hasNext("[a-zA-Z]+$")) {
+				System.out.print("Enter a valid name: ");
+				scanner.nextLine();
+			}
+			String newLname = scanner.nextLine();
+			System.out.println(lname);
+			System.out.print("Update first name:");
+			while (!scanner.hasNext("[a-zA-Z]+")) {
+				System.out.print("Enter a valid name: ");
+				scanner.nextLine();
+			}
+			String newFname = scanner.nextLine();
+			System.out.println(" Updating ID: "+findId+"\t"+newLname+", "+newFname);
+			student.updateStudent(findId, newLname, newFname);
+		}
 	}
 	
 	public static void listDB() {
