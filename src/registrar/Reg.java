@@ -9,11 +9,7 @@ import java.util.Scanner;
 public class Reg {
 
 	public static void main(String[] args) {
-		final String db = "jdbc:postgresql://localhost:5432/registrar";
-		final String user = "postgres";
-		final String pass = "admin";
 		Scanner scanner = new Scanner(System.in);
-		String input = null;
 		boolean quit = false;
 		StudentOptions student = new StudentOptions();
 		CourseOptions cs = null;
@@ -28,6 +24,9 @@ public class Reg {
 				break;
 			case "2":
 				updateStudent(scanner, student);
+				break;
+			case "3":
+				searchStudents(scanner, student);
 				break;
 			case "0":
 				quit = true;
@@ -46,13 +45,8 @@ public class Reg {
 	
 	public static void addStudent(Scanner scanner, StudentOptions student) {
 		int id;
-		System.out.print("You have selected to add a new student\nPlease enter your ID number: ");
-		scanner.nextLine();
-		while (!scanner.hasNextInt() || (id = scanner.nextInt())<=0) {
-			System.out.print("Please enter a valid ID: ");
-			scanner.nextLine();
-		}
-		scanner.nextLine();
+		System.out.println("You have selected to add a new student");
+		id = getIdInput(scanner);
 		System.out.println(id);
 		System.out.print("Enter last name: ");
 		while (!scanner.hasNext("[a-zA-Z]+$")) {
@@ -74,13 +68,8 @@ public class Reg {
 	public static void updateStudent(Scanner scanner, StudentOptions student) {
 		int id, findId = 0, newId;
 		String lname = null, fname = null;
-		System.out.print("You have selected to update student information\nEnter your ID number: ");
-		scanner.nextLine();
-		while (!scanner.hasNextInt() || (id = scanner.nextInt())<=0) {
-			System.out.print("Please enter a valid ID: ");
-			scanner.nextLine();
-		}
-		ResultSet rs = student.findStudent(id);
+		System.out.print("You have selected to update student information");
+		ResultSet rs = student.findStudent(getIdInput(scanner));
 		try {
 			while (rs.next()) {
 				findId = rs.getInt("id");
@@ -115,6 +104,27 @@ public class Reg {
 		}
 	}
 	
+	public static void searchStudents(Scanner scanner, StudentOptions student) {
+		int id = 0;
+		System.out.println("You have selected to search for a student");
+		ResultSet rs = student.findStudent(getIdInput(scanner));
+		String findId, lname, fname;
+		findId = lname = fname = null;
+		try {
+			while (rs.next()) {
+				findId = rs.getString("id");
+				lname = rs.getString("lname");
+				fname = rs.getString("fname");
+				System.out.println("Found\n"+findId+"\t"+lname+"\t"+fname);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (findId==null)
+			System.out.println("No student found");
+	}
+	
 	public static void listDB() {
 		Connection c = null;
 		Statement stmt = null;
@@ -144,6 +154,18 @@ public class Reg {
 			if (stmt != null) try { stmt.close(); } catch (SQLException e) {e.printStackTrace();}
 			if (c != null) try { c.close(); } catch (SQLException e) {e.printStackTrace();}
 		}
+	}
+	
+	public static int getIdInput(Scanner scanner) {
+		int id = 0;
+		System.out.print("Please enter an ID: ");
+		scanner.nextLine();
+		while (!scanner.hasNextInt()||(id=scanner.nextInt())<=0) {
+			System.out.print("Please enter a valid ID: ");
+			scanner.nextLine();
 		}
+		scanner.nextLine();
+		return id;
+	}
 
 }
