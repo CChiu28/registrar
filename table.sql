@@ -20,4 +20,4 @@ CREATE TABLE IF NOT EXISTS regcourse (
 )
 
 \COPY students FROM './MOCK_DATA.csv' WITH (FORMAT csv);
-\COPY class FROM './MOCK_DATA2.csv' WITH (FORMAT csv);
+\COPY class FROM './Book1.csv' WITH (FORMAT csv);

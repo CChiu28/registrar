@@ -1,6 +1,7 @@
 package registrar;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -72,9 +73,9 @@ public class Reg {
 		ResultSet rs = student.findStudent(getIdInput(scanner));
 		try {
 			while (rs.next()) {
-				findId = rs.getInt("id");
-				lname = rs.getString("lname");
-				fname = rs.getString("fname");
+				findId = rs.getInt("ID");
+				lname = rs.getString("LNAME");
+				fname = rs.getString("FNAME");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -105,38 +106,44 @@ public class Reg {
 	}
 	
 	public static void searchStudents(Scanner scanner, StudentOptions student) {
-		int id = 0;
 		System.out.println("You have selected to search for a student");
-		ResultSet rs = student.findStudent(getIdInput(scanner));
+		int id = getIdInput(scanner);
+		ResultSet rs = student.findStudent(id);
 		String findId, lname, fname;
 		findId = lname = fname = null;
 		try {
 			while (rs.next()) {
-				findId = rs.getString("id");
-				lname = rs.getString("lname");
-				fname = rs.getString("fname");
+				findId = rs.getString(1);
+				lname = rs.getString(2);
+				fname = rs.getString(3);
 				System.out.println("Found\n"+findId+"\t"+lname+"\t"+fname);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			if (rs!=null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 		}
 		if (findId==null)
-			System.out.println("No student found");
+			System.out.println("No student found with ID "+id);
 	}
 	
 	public static void listDB() {
 		Connection c = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
 			c = DataSource.getInstance().getConnection();
-			stmt = c.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM students;");
+			stmt = c.prepareStatement("SELECT * FROM students;");
+			rs = stmt.executeQuery();
 			while (rs.next()) {
-				int id = rs.getInt("id");
-				String lname = rs.getString("lname");
-				String fname = rs.getString("fname");
+				int id = rs.getInt("ID");
+				String lname = rs.getString("LNAME");
+				String fname = rs.getString("FNAME");
 				System.out.println(id+"\t"+lname+"\t"+fname);
 			}
 		//		rs = stmt.executeQuery("SELECT * FROM class;");
